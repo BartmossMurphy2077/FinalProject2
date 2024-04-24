@@ -125,83 +125,21 @@ void readWholeRam(RecordStructure *array, int *size){
         printf("\n");
     }
 }
-void ChangeComponent(char fileName[100], char changedComponent[100], int row, int column){
-    FILE *temp;
-    FILE *file = fopen(fileName, "r");
 
-    if (file == NULL) {
-        printf("Error opening file");
-        exit(-1);
-    } else {
-        printf("File opened successfully for reading\n");
+//functions for changing components
+void changeDate(){}
+void changeDescription(){}
+void changeCategory(){}
+void changePriority(){}
+void changeStatus(){}
 
-        temp = tmpfile();
-        if (temp == NULL) {
-            printf("Error creating temporary file");
-            exit(-1);
-        } else {
-            printf("Temporary file created successfully\n");
-        }
+//functions for filtering
+void filterByTime(){}
+void filterByCategry(){}
+void filterByPriority(){}
+void filterByStatus(){}
 
-        char buffer[1000];
-        int currentRow = 0;
 
-        while(fgets(buffer, sizeof(buffer), file)){
-            char *data = strtok(buffer, ",");
-            int currentColumn = 0;
-
-            if (data == NULL) {
-                continue;
-            }
-
-            // Check if the line is empty
-            if (strcmp(data, "\n") == 0) {
-                fprintf(temp, "\n");
-                currentRow++;
-                continue;
-            }
-
-            while(data != NULL){
-                if(currentRow == row - 1 && currentColumn == column - 1){
-                    if(currentColumn == 4){
-                        fprintf(temp, "%s\n", changedComponent);
-                        printf("The component has been changed\n");
-                    } else {
-                        fprintf(temp, "%s,", changedComponent);
-                        printf("The component has been changed\n");
-                    }
-                } else if(currentColumn == 4){
-                    fprintf(temp, "%s", data);
-                } else {
-                    fprintf(temp, "%s,", data);
-                }
-
-                data = strtok(NULL, ",");
-                currentColumn++;
-            }
-            //fprintf(temp, "\n");
-            currentRow++;
-        }
-
-        fclose(file);
-        rewind(temp);
-
-        file = fopen(fileName, "w");
-        if (file == NULL) {
-            printf("Error opening file for writing");
-            exit(-1);
-        } else {
-            printf("File opened successfully for writing\n");
-        }
-
-        while (fgets(buffer, sizeof(buffer), temp) != NULL) {
-            fputs(buffer, file);
-        }
-
-        fclose(file);
-        fclose(temp);
-    }
-}
 int countRows(char fileName[100]){
     FILE *file = fopen(fileName, "r");
     if(file == NULL){
@@ -218,3 +156,70 @@ int countRows(char fileName[100]){
         return current_line;
     }
 }
+
+void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
+    FILE *temp = tmpfile();
+    if(temp == NULL){
+        printf("Couldn't create temporary file\n");
+        exit(-1);
+    }
+
+    for(int i = 0; i < *size-1; i++){
+        char String[500];
+        snprintf(String, sizeof(String), "%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
+        printf("*********\n");
+        printf("%s", String);
+        printf("*********\n");
+        fputs(String, temp);
+    }
+    char String[500];
+    snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[*size-1].date, (*array)[*size-1].description, (*array)[*size-1].category, (*array)[*size-1].priority, (*array)[*size-1].status);
+    printf("*********\n");
+    printf("%s", String);
+    printf("*********\n");
+    fputs(String, temp);
+
+//    //
+//    rewind(temp);
+//    printf("=========================================\n");
+//
+//    char buffer2[1000];
+//    size_t bytesRead;
+//
+//    // Read and print each block of data until the end of the file
+//    while ((bytesRead = fread(buffer2, 1, sizeof(buffer2), temp)) > 0) {
+//        // Print or process the data as needed
+//        fwrite(buffer2, 1, bytesRead, stdout);
+//    }
+//
+//    // Check for errors or end of file
+//    if (feof(temp)) {
+//        printf("End of file reached.\n");
+//    } else if (ferror(temp)) {
+//        printf("Error reading file.\n");
+//    }
+//
+//    printf("=========================================\n");
+//
+//    //
+
+    rewind(temp);
+
+    FILE *file = fopen(fileName, "w");
+    if(fileName == NULL){
+        printf("Couldn't create temporary file\n");
+        exit(-1);
+    }
+
+    char buffer[500];
+    while(fgets(buffer, sizeof(buffer), temp) != NULL){
+        fputs(buffer, file);
+    }
+
+    fclose(file);
+    fclose(temp);
+}
+
+
+
+//date,description,category,1,status

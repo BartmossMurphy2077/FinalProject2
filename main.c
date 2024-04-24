@@ -8,8 +8,6 @@ char fileName[100] = "C:\\Users\\hugok\\CLionProjects\\FinalProject2\\info.csv";
 
 
 int main() {
-    printf("Hello, World!\n");
-
     ReadWholeFIle(fileName);
 
     printf("\n");
@@ -21,21 +19,12 @@ int main() {
     // Get the number of records
     int size = countRows(fileName);
 
-    // Iterate through records and print details
-//    for (int i = 0; i < size; i++) {
-//        printf("Record %d:\n", i + 1);
-//        printf("Date: %s\n", records[i].date);
-//        printf("Description: %s\n", records[i].description);
-//        printf("Category: %s\n", records[i].category);
-//        printf("Priority: %d\n", records[i].priority);
-//        printf("Status: %s\n", records[i].status);
-//        printf("\n");
-//    }
-
+    printf("==================================================\n");
+    printf("Reading RAM\n");
     readWholeRam(records, &size);
 
     RecordStructure test;
-    strcpy(test.date, "000");
+    strcpy(test.date, "date");
     strcpy(test.description, "00");
     strcpy(test.category, "000");
     test.priority = 0;
@@ -44,6 +33,24 @@ int main() {
     addRecordToRam(&records, &size, test);
 
     readWholeRam(records, &size);
+
+    deleteRecordInRam(&records, &size, "description3");
+    printf("==================================================\n");
+    printf("\nNow all description 3 deleted \n");
+    readWholeRam(records, &size);
+
+
+    //csv file before saving
+    printf("==================================================\n");
+    printf("\nFile is being read \n");
+    ReadWholeFIle(fileName);
+    printf("\n");
+    printf("==================================================\n");
+    printf("\nRam being saved to CSV \n");
+    saveRamToCsv(fileName, &records, &size);
+    printf("==================================================\n");
+    printf("\n csv file after saving\n");
+    ReadWholeFIle(fileName);
 
     // Free the dynamically allocated memory
     freeDynamicArray(records);
