@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include "functions.h"
 
 void ReadWholeFIle(char fileName[100]){
     FILE *file = fopen(fileName, "r");
@@ -21,100 +22,107 @@ void ReadWholeFIle(char fileName[100]){
     fclose(file);
 
 }
-// date, description, category, priority, status
-void addRecord(char fileName[100], char date[100], char description[100], char category[100], char priority[100], char status[100]){
-    FILE *file = fopen(fileName, "a");
+
+RecordStructure *createDyanmicArray(char filename[100]){
+
+    int size = countRows(filename);
+
+
+    RecordStructure *array = (RecordStructure *)malloc(size * sizeof(RecordStructure));
+    if (array == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    FILE *file = fopen(filename, "r");
     if(file == NULL){
-        printf("Error opening file");
         exit(-1);
     } else {
-        printf("File opened succesfully for appending\n");
+        printf("File opened succesfully for reading.\n");
     }
 
-    fprintf(file, "\n%s,%s,%s,%s,%s", date, description, category, priority, status);
-    fclose(file);
+    char buffer[1000];
+    int i = 0;
+    while(fgets(buffer, sizeof(buffer), file)){
+        char *token = strtok(buffer, ",");
+        strcpy(array[i].date, token);
+
+        token = strtok(NULL, ",");
+        strcpy(array[i].description, token);
+
+        token = strtok(NULL, ",");
+        strcpy(array[i].category, token);
+
+        token = strtok(NULL, ",");
+        array[i].priority = atoi(token);
+
+        token = strtok(NULL, ",");
+        strcpy(array[i].status, token);
+
+        i++;
+    }
+
+    return array;
 }
-void deleteRecord(char fileName[100], int LineNo){
-    FILE *temp;
-    FILE *file = fopen(fileName, "r");
 
-    if (file == NULL) {
-        printf("Error opening file");
+void freeDynamicArray(RecordStructure *array) {
+    free(array);
+}
+
+void addRecordToRam(RecordStructure **array, int *size, RecordStructure newItem){
+
+    //Realocating memory
+    *array = (RecordStructure *) realloc(*array, (*size + 1) * sizeof(RecordStructure ));
+    if(*array == NULL){
+        printf("Memory reallocation failed\n");
         exit(-1);
-    } else {
-        printf("File opened successfully for reading\n");
+    }
 
-        temp = tmpfile();
-        if (temp == NULL) {
-            printf("Error creating temporary file");
-            exit(-1);
-        } else {
-            printf("Temporary file created successfully\n");
-        }
+    //putting the new item into the array
+    (*array)[*size] = newItem;
 
-        char buffer[1000];
-        int current_line = 1;
+    //udpate the size
 
-        // Process data lines
-        while (fgets(buffer, sizeof(buffer), file) != NULL) {
-            current_line++;
-            if (current_line != LineNo) {
-                fputs(buffer, temp);
+    (*size)++;
+}
+
+void deleteRecordInRam(RecordStructure **array, int *size, char word[100]){
+    int found = 0;
+    for(int i = 0; i< *size; i++){
+        if (strstr((*array)[i].description, word) != NULL ||
+            strstr((*array)[i].category, word) != NULL ||
+            strstr((*array)[i].status, word) != NULL) {
+            found = 1;
+            // Shift elements after the deleted item to the left
+            for (int j = i; j < *size - 1; j++) {
+                (*array)[j] = (*array)[j + 1];
             }
+            break;
         }
-
-        fclose(file);
-        rewind(temp);
-
-        file = fopen(fileName, "w");
-        if (file == NULL) {
-            printf("Error opening file for writing");
-            exit(-1);
-        } else {
-            printf("File opened successfully for writing\n");
+    }
+    if (found) {
+        // Adjust the size of the dynamic array
+        *size -= 1;
+        // Reallocate memory to shrink the dynamic array
+        *array = (RecordStructure *)realloc(*array, (*size) * sizeof(RecordStructure));
+        if (*array == NULL) {
+            fprintf(stderr, "Memory reallocation failed\n");
+            exit(EXIT_FAILURE);
         }
-
-        while (fgets(buffer, sizeof(buffer), temp) != NULL) {
-            fputs(buffer, file);
-        }
-        fclose(file);
-        fclose(temp);
+    } else {
+        printf("No record containing '%s' found\n", word);
     }
 }
-char* ReturnComponent(char fileName[100], int row, int column){
-    FILE *file = fopen(fileName, "r");
 
-    if (file == NULL) {
-        printf("Error opening file");
-        exit(-1);
-    } else {
-        printf("File opened successfully for reading\n");
-
-        char *data;
-        char buffer[1000];
-
-        //skips to the target row
-        for(int i = 0; i < row; i++){
-            fgets(buffer, sizeof(buffer), file);
-        }
-        printf("The target row is: %s\n", buffer);
-
-        if(column == 1){
-            data = strtok(buffer, ",");
-            printf("The first component is: %s\n", data);
-        } else{
-            data = strtok(buffer, ",");
-            printf("The first component is: %s\n", data);
-
-            for(int i = 0; i < column - 1; i++){
-                data = strtok(NULL, ",");
-            }
-        }
-
-        fclose(file);
-        printf("The final output is: %s\n", data);
-
-        return data;
+void readWholeRam(RecordStructure *array, int *size){
+    for(int i = 0; i < *size; i++){
+        printf("Record %d:\n", i + 1);
+        printf("Date: %s\n", array[i].date);
+        printf("Description: %s\n", array[i].description);
+        printf("Category: %s\n", array[i].category);
+        printf("Priority: %d\n", array[i].priority);
+        printf("Status: %s\n", array[i].status);
+        printf("\n");
     }
 }
 void ChangeComponent(char fileName[100], char changedComponent[100], int row, int column){
@@ -208,44 +216,5 @@ int countRows(char fileName[100]){
         }
         fclose(file);
         return current_line;
-    }
-}
-int findRow(char fileName[100], char website_name[100]){
-    int row_number = 0;
-    int aux_var = 0; //variable to track if the files is empty
-    char text_line[500], aux_web_name[100], *token;
-
-    strcpy(aux_web_name, website_name);
-    strupr(aux_web_name);
-
-    FILE *file = fopen(fileName, "r");
-
-    if(file == NULL){
-        printf("Could not open file for reading \n");
-        return -1;
-
-    }else{
-        while(!feof(file)){
-            aux_var=1;
-            fgets(text_line, sizeof(text_line), file);
-            token = strtok(text_line,",");
-            /*printf("%s", token);
-            getchar();*/
-            row_number = row_number + 1;
-
-            token = strupr(token);
-
-            if(!strcmp(aux_web_name, token)){
-                break;
-            }
-            if(feof(file)){
-                row_number = 0;
-            }
-        }
-        if(aux_var==0){
-            row_number = 0;
-        }
-        fclose(file);
-        return row_number;
     }
 }
