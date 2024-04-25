@@ -10,9 +10,6 @@ char fileName[100] = "C:\\Users\\hugok\\CLionProjects\\FinalProject2\\info.csv";
 int main() {
     ReadWholeFIle(fileName);
 
-    printf("\n");
-    ReadWholeFIle(fileName);
-
     // Create dynamic array of RecordStructure
     RecordStructure *records = createDyanmicArray(fileName);
 
@@ -38,6 +35,17 @@ int main() {
     printf("==================================================\n");
     printf("\nNow all description 3 deleted \n");
     readWholeRam(records, &size);
+
+    printf("==================================================\n");
+    printf("\n changing 1 columns components \n");
+    changeDate(&records, 1, "0/0/0");
+    changeDescription(&records, 1, "yolo");
+    changeCategory(&records, 1, "bruh");
+    changePriority(&records, 1, 69);
+    changeStatus(&records, 1, "skibiddy\n");
+    readWholeRam(records, &size);
+
+
 
 
     //csv file before saving

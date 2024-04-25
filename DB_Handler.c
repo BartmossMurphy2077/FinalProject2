@@ -127,11 +127,22 @@ void readWholeRam(RecordStructure *array, int *size){
 }
 
 //functions for changing components
-void changeDate(){}
-void changeDescription(){}
-void changeCategory(){}
-void changePriority(){}
-void changeStatus(){}
+void changeDate(RecordStructure **array, int columnNo, char newDate[100]){
+    strcpy((*array)[columnNo].date, newDate);
+}
+void changeDescription(RecordStructure **array, int columnNo, char newDescription[100]){
+    strcpy((*array)[columnNo].description, newDescription);
+}
+void changeCategory(RecordStructure **array, int columnNo, char newCategory[100]){
+    strcpy((*array)[columnNo].category, newCategory);
+}
+void changePriority(RecordStructure **array, int columnNo, int newPriority){
+    (*array)[columnNo].priority = newPriority;
+}
+//for change status the new string needs to have a \n on the end for saving purposes
+void changeStatus(RecordStructure **array, int columnNo, char newStatus[100]){
+    strcpy((*array)[columnNo].status, newStatus);
+}
 
 //functions for filtering
 void filterByTime(){}
@@ -167,41 +178,41 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
     for(int i = 0; i < *size-1; i++){
         char String[500];
         snprintf(String, sizeof(String), "%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
-        printf("*********\n");
+        printf("\n*********\n");
         printf("%s", String);
-        printf("*********\n");
+        printf("\n*********\n");
         fputs(String, temp);
     }
     char String[500];
     snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[*size-1].date, (*array)[*size-1].description, (*array)[*size-1].category, (*array)[*size-1].priority, (*array)[*size-1].status);
-    printf("*********\n");
+    printf("\n*********\n");
     printf("%s", String);
-    printf("*********\n");
+    printf("\n*********\n");
     fputs(String, temp);
 
-//    //
-//    rewind(temp);
-//    printf("=========================================\n");
-//
-//    char buffer2[1000];
-//    size_t bytesRead;
-//
-//    // Read and print each block of data until the end of the file
-//    while ((bytesRead = fread(buffer2, 1, sizeof(buffer2), temp)) > 0) {
-//        // Print or process the data as needed
-//        fwrite(buffer2, 1, bytesRead, stdout);
-//    }
-//
-//    // Check for errors or end of file
-//    if (feof(temp)) {
-//        printf("End of file reached.\n");
-//    } else if (ferror(temp)) {
-//        printf("Error reading file.\n");
-//    }
-//
-//    printf("=========================================\n");
-//
-//    //
+    //
+    rewind(temp);
+    printf("=========================================\n");
+
+    char buffer2[1000];
+    size_t bytesRead;
+
+    // Read and print each block of data until the end of the file
+    while ((bytesRead = fread(buffer2, 1, sizeof(buffer2), temp)) > 0) {
+        // Print or process the data as needed
+        fwrite(buffer2, 1, bytesRead, stdout);
+    }
+
+    // Check for errors or end of file
+    if (feof(temp)) {
+        printf("End of file reached.\n");
+    } else if (ferror(temp)) {
+        printf("Error reading file.\n");
+    }
+
+    printf("=========================================\n");
+
+    //
 
     rewind(temp);
 
