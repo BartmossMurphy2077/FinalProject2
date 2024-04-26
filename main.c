@@ -76,6 +76,12 @@ int main() {
     // Free the dynamically allocated memory
     freeDynamicArray(records);
 
+    printf("==================================================\n");
+    printf("\n how many days until a future date 28/04/2024\n");
+    double days = presentFutureDifference("30/04/2024");
+    printf("%f", days);
+
+
     return 0;
 }
 

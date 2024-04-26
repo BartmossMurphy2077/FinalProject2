@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <time.h>
 #include "functions.h"
 
 void ReadWholeFIle(char fileName[100]){
@@ -144,7 +145,62 @@ void changeStatus(RecordStructure **array, int columnNo, char newStatus[100]){
     strcpy((*array)[columnNo].status, newStatus);
 }
 
-//functions for filtering
+//function that finds how many days from today the thing is due
+double presentFutureDifference(char futureDate[100]){
+    char copyFutureDate[100];
+
+    strncpy(copyFutureDate, futureDate, sizeof(copyFutureDate)-1);
+    copyFutureDate[sizeof(copyFutureDate) - 1] = '\0';
+
+    char *day = strtok(copyFutureDate, "/");
+    char *month = strtok(NULL, "/");
+    char *year = strtok(NULL, "/");
+
+    int dayValue;
+    int monthValue;
+    int yearValue;
+    double differenceInSeconds;
+    double differenceInDays;
+
+    if(day != NULL && month != NULL && year != NULL){
+        dayValue = atoi(day);
+        monthValue = atoi(month) - 1; //because jan is 0, etc.
+        yearValue = atoi(year) - 1900; //cause its since 1900 or something
+
+        printf("Day: %d, Month: %d, Year: %d\n", dayValue, monthValue, yearValue);
+
+        struct tm futureDateStruct = {0};
+        time_t currentTime = time(NULL);
+
+        futureDateStruct.tm_year = yearValue;
+        futureDateStruct.tm_mon = monthValue;
+        futureDateStruct.tm_mday = dayValue;
+
+        time_t futureTime = mktime(&futureDateStruct);
+
+        //a check to see if the date is really in the future (can be used to check things that are overdue)
+        if (futureTime == -1) {
+            printf("Invalid future date.\n");
+            return -1.0;
+        }
+
+        //calculating the difference in seconds
+        differenceInSeconds = difftime(futureTime, currentTime);
+
+        //turning it into days
+        differenceInDays = differenceInSeconds/(24*60*60);
+
+        return differenceInDays;
+
+
+    } else {
+        printf("Invalid date format: %s\n", futureDate);
+        return -1.0;
+    }
+
+}
+
+//function that uses the presentFutureDifference function to list the things that are due in a certain time interval
 void filterByTime(){}
 
 //categories: Work, Hobby, Home
