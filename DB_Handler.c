@@ -146,9 +146,63 @@ void changeStatus(RecordStructure **array, int columnNo, char newStatus[100]){
 
 //functions for filtering
 void filterByTime(){}
-void filterByCategry(){}
-void filterByPriority(){}
-void filterByStatus(){}
+
+//categories: Work, Hobby, Home
+//should print out all the records with the specified category
+void filterByCategory(RecordStructure **array, int *size, char category[100]){
+    int found = 0;
+    for(int i = 0; i <*size; i++){
+        if(strstr((*array)[i].category, category) != NULL){
+            printf("Date: %s\n", (*array)[i].date);
+            printf("Description: %s\n", (*array)[i].description);
+            printf("Category: %s\n", (*array)[i].category);
+            printf("Priority: %d\n", (*array)[i].priority);
+            printf("Status: %s\n", (*array)[i].status);
+            found++;
+        }
+    }
+
+    if(found == 0){
+        printf("No record with specified category was found\n");
+    }
+}
+//Priority levels: 1(Very urgent), 2(urgent), 3(not urgent)
+void filterByPriority(RecordStructure **array, int *size, int priority){
+    int found = 0;
+    for(int i = 0; i<*size; i++){
+        if((*array)[i].priority == priority){
+            printf("Date: %s\n", (*array)[i].date);
+            printf("Description: %s\n", (*array)[i].description);
+            printf("Category: %s\n", (*array)[i].category);
+            printf("Priority: %d\n", (*array)[i].priority);
+            printf("Status: %s\n", (*array)[i].status);
+            found++;
+        }
+    }
+
+    if(found == 0){
+        printf("No record with specified priority level was found\n");
+    }
+
+}
+//Status levels: Completed, In progress, No status
+void filterByStatus(RecordStructure **array, int *size, char status[100]){
+    int found = 0;
+    for(int i = 0; i <*size; i++){
+        if(strstr((*array)[i].status, status) != NULL){
+            printf("Date: %s\n", (*array)[i].date);
+            printf("Description: %s\n", (*array)[i].description);
+            printf("Category: %s\n", (*array)[i].category);
+            printf("Priority: %d\n", (*array)[i].priority);
+            printf("Status: %s\n", (*array)[i].status);
+            found++;
+        }
+    }
+
+    if(found == 0){
+        printf("No record with specified status was found\n");
+    }
+}
 
 
 int countRows(char fileName[100]){

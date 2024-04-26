@@ -23,13 +23,27 @@ int main() {
     RecordStructure test;
     strcpy(test.date, "date");
     strcpy(test.description, "00");
-    strcpy(test.category, "000");
+    strcpy(test.category, "category1");
     test.priority = 0;
     strcpy(test.status, "00");
 
+    printf("==================================================\n");
+    printf("Record is being added to RAM\n");
     addRecordToRam(&records, &size, test);
-
     readWholeRam(records, &size);
+
+    printf("==================================================\n");
+    printf("Category 1 is being filtered\n");
+    filterByCategory(&records, &size, "category1");
+
+    printf("==================================================\n");
+    printf("Priority 1 is being filtered\n");
+    filterByPriority(&records, &size, 1);
+
+    printf("==================================================\n");
+    printf("status status4 is being filtered\n");
+    filterByStatus(&records, &size, "status4");
+
 
     deleteRecordInRam(&records, &size, "description3");
     printf("==================================================\n");
@@ -44,7 +58,6 @@ int main() {
     changePriority(&records, 1, 69);
     changeStatus(&records, 1, "skibiddy\n");
     readWholeRam(records, &size);
-
 
 
 

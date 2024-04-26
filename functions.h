@@ -24,4 +24,7 @@ void changeDescription(RecordStructure **array, int columnNo, char newDescriptio
 void changeCategory(RecordStructure **array, int columnNo, char newCategory[100]);
 void changePriority(RecordStructure **array, int columnNo, int newPriority);
 void changeStatus(RecordStructure **array, int columnNo, char newStatus[100]);
+void filterByCategory(RecordStructure **array, int *size, char category[100]);
+void filterByPriority(RecordStructure **array, int *size, int priority);
+void filterByStatus(RecordStructure **array, int *size, char status[100]);
 #endif //FINALPROJECT2_FUNCTIONS_H
