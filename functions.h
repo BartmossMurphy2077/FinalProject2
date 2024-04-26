@@ -29,4 +29,7 @@ void filterByPriority(RecordStructure **array, int *size, int priority);
 void filterByStatus(RecordStructure **array, int *size, char status[100]);
 
 double presentFutureDifference(char futureDate[100]);
+void filterByTimeGreaterThan(RecordStructure **array, int *size, double timeInterval);
+void filterByTimeLesserThan(RecordStructure **array, int *size, double timeInterval);
+void filterByTimeOverdue(RecordStructure **array, int *size);
 #endif //FINALPROJECT2_FUNCTIONS_H

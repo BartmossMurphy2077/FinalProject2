@@ -20,6 +20,21 @@ int main() {
     printf("Reading RAM\n");
     readWholeRam(records, &size);
 
+    printf("==================================================\n");
+    printf("Record is being added to RAM\n");
+
+    printf("**************************************************\n");
+    printf("checking if anything is after five days\n");
+    filterByTimeGreaterThan(&records, &size, 5.0);
+
+    printf("**************************************************\n");
+    printf("checking if anything is before five days\n");
+    filterByTimeLesserThan(&records, &size, 5.0);
+
+    printf("**************************************************\n");
+    printf("checking if anything is overdue\n");
+    filterByTimeOverdue(&records, &size);
+
     RecordStructure test;
     strcpy(test.date, "date");
     strcpy(test.description, "00");
@@ -75,11 +90,6 @@ int main() {
 
     // Free the dynamically allocated memory
     freeDynamicArray(records);
-
-    printf("==================================================\n");
-    printf("\n how many days until a future date 28/04/2024\n");
-    double days = presentFutureDifference("30/04/2024");
-    printf("%f", days);
 
 
     return 0;

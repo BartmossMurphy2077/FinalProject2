@@ -180,7 +180,7 @@ double presentFutureDifference(char futureDate[100]){
 
         //a check to see if the date is really in the future (can be used to check things that are overdue)
         if (futureTime == -1) {
-            printf("Invalid future date.\n");
+            printf("Date not in the future.\n");
             return -1.0;
         }
 
@@ -201,7 +201,56 @@ double presentFutureDifference(char futureDate[100]){
 }
 
 //function that uses the presentFutureDifference function to list the things that are due in a certain time interval
-void filterByTime(){}
+void filterByTimeGreaterThan(RecordStructure **array, int *size, double timeInterval){
+    int found = 0;
+    for(int i = 0; i<*size; i++){
+        if(presentFutureDifference((*array)[i].date) >= timeInterval){
+            printf("Date: %s\n", (*array)[i].date);
+            printf("Description: %s\n", (*array)[i].description);
+            printf("Category: %s\n", (*array)[i].category);
+            printf("Priority: %d\n", (*array)[i].priority);
+            printf("Status: %s\n", (*array)[i].status);
+            found++;
+        }
+    }
+    if(found == 0){
+        printf("No record which is due after %f days passed found\n", timeInterval);
+    }
+}
+
+void filterByTimeLesserThan(RecordStructure **array, int *size, double timeInterval){
+    int found = 0;
+    for(int i = 0; i<*size; i++){
+        if(presentFutureDifference((*array)[i].date) <= timeInterval){
+            printf("Date: %s\n", (*array)[i].date);
+            printf("Description: %s\n", (*array)[i].description);
+            printf("Category: %s\n", (*array)[i].category);
+            printf("Priority: %d\n", (*array)[i].priority);
+            printf("Status: %s\n", (*array)[i].status);
+            found++;
+        }
+    }
+    if(found == 0){
+        printf("No record which is due within %f days found\n", timeInterval);
+    }
+}
+
+void filterByTimeOverdue(RecordStructure **array, int *size){
+    int found = 0;
+    for(int i = 0; i<*size; i++){
+        if(presentFutureDifference((*array)[i].date) <= 0){
+            printf("Date: %s\n", (*array)[i].date);
+            printf("Description: %s\n", (*array)[i].description);
+            printf("Category: %s\n", (*array)[i].category);
+            printf("Priority: %d\n", (*array)[i].priority);
+            printf("Status: %s\n", (*array)[i].status);
+            found++;
+        }
+    }
+    if(found == 0){
+        printf("No record which is overdue found\n");
+    }
+}
 
 //categories: Work, Hobby, Home
 //should print out all the records with the specified category
