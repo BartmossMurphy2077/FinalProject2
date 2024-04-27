@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 #include "functions.h"
+
+bool verbose = false;
 
 void ReadWholeFIle(char fileName[100]){
     FILE *file = fopen(fileName, "r");
     if(file == NULL){
         exit(-1);
     } else {
-        printf("File opened succesfully for reading.\n");
+        if(verbose)printf("File opened succesfully for reading.\n");
     }
 
     char buffer[1000];
@@ -29,7 +32,7 @@ RecordStructure *createDyanmicArray(char filename[100]){
 
     RecordStructure *array = (RecordStructure *)malloc(size * sizeof(RecordStructure));
     if (array == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
+        if(verbose)fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
 
@@ -37,7 +40,7 @@ RecordStructure *createDyanmicArray(char filename[100]){
     if(file == NULL){
         exit(-1);
     } else {
-        printf("File opened succesfully for reading.\n");
+        if(verbose)printf("File opened succesfully for reading.\n");
     }
 
     char buffer[1000];
@@ -73,7 +76,7 @@ void addRecordToRam(RecordStructure **array, int *size, RecordStructure newItem)
     //Realocating memory
     *array = (RecordStructure *) realloc(*array, (*size + 1) * sizeof(RecordStructure ));
     if(*array == NULL){
-        printf("Memory reallocation failed\n");
+        if(verbose)printf("Memory reallocation failed\n");
         exit(-1);
     }
 
@@ -105,11 +108,11 @@ void deleteRecordInRam(RecordStructure **array, int *size, char word[100]){
         // Reallocate memory to shrink the dynamic array
         *array = (RecordStructure *)realloc(*array, (*size) * sizeof(RecordStructure));
         if (*array == NULL) {
-            fprintf(stderr, "Memory reallocation failed\n");
+            if(verbose)fprintf(stderr, "Memory reallocation failed\n");
             exit(EXIT_FAILURE);
         }
     } else {
-        printf("No record containing '%s' found\n", word);
+        printf("No record containing %s found\n", word);
     }
 }
 
@@ -126,7 +129,7 @@ void deleteRecordInRamByIndex(RecordStructure **array, int *size, int index) {
     // Reallocate memory to shrink the dynamic array
     RecordStructure *temp = (RecordStructure *)realloc(*array, (*size) * sizeof(RecordStructure));
     if (temp == NULL) {
-        fprintf(stderr, "Memory reallocation failed\n");
+        if(verbose)fprintf(stderr, "Memory reallocation failed\n");
         exit(EXIT_FAILURE); // Terminate the program in case of memory allocation failure
     }
 
@@ -186,7 +189,7 @@ double presentFutureDifference(char futureDate[100]){
         monthValue = atoi(month) - 1; //because jan is 0, etc.
         yearValue = atoi(year) - 1900; //cause its since 1900 or something
 
-        printf("Day: %d, Month: %d, Year: %d\n", dayValue, monthValue, yearValue);
+        if(verbose)printf("Day: %d, Month: %d, Year: %d\n", dayValue, monthValue, yearValue);
 
         struct tm futureDateStruct = {0};
         time_t currentTime = time(NULL);
@@ -351,7 +354,7 @@ void filterByStatus(RecordStructure **array, int *size, char status[100]){
 int countRows(char fileName[100]){
     FILE *file = fopen(fileName, "r");
     if(file == NULL){
-        printf("Error opening file for reading");
+        if(verbose)printf("Error opening file for reading");
         exit(-1);
     } else {
         char buffer[1000];
@@ -368,54 +371,53 @@ int countRows(char fileName[100]){
 void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
     FILE *temp = tmpfile();
     if(temp == NULL){
-        printf("Couldn't create temporary file\n");
+        if(verbose)printf("Couldn't create temporary file\n");
         exit(-1);
     }
 
     for(int i = 0; i < *size-1; i++){
         char String[500];
         snprintf(String, sizeof(String), "%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
-        printf("\n*********\n");
-        printf("%s", String);
-        printf("\n*********\n");
+        if(verbose)printf("\n*********\n");
+        if(verbose)printf("%s", String);
+        if(verbose)printf("\n*********\n");
         fputs(String, temp);
     }
     char String[500];
     snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[*size-1].date, (*array)[*size-1].description, (*array)[*size-1].category, (*array)[*size-1].priority, (*array)[*size-1].status);
-    printf("\n*********\n");
-    printf("%s", String);
-    printf("\n*********\n");
+    if(verbose)printf("\n*********\n");
+    if(verbose)printf("%s", String);
+    if(verbose)printf("\n*********\n");
     fputs(String, temp);
 
-    //
-    rewind(temp);
-    printf("=========================================\n");
+    if(verbose){
+        rewind(temp);
+        printf("=========================================\n");
 
-    char buffer2[1000];
-    size_t bytesRead;
+        char buffer2[1000];
+        size_t bytesRead;
 
-    // Read and print each block of data until the end of the file
-    while ((bytesRead = fread(buffer2, 1, sizeof(buffer2), temp)) > 0) {
-        // Print or process the data as needed
-        fwrite(buffer2, 1, bytesRead, stdout);
+        // Read and print each block of data until the end of the file
+        while ((bytesRead = fread(buffer2, 1, sizeof(buffer2), temp)) > 0) {
+            // Print or process the data as needed
+            fwrite(buffer2, 1, bytesRead, stdout);
+        }
+
+        // Check for errors or end of file
+        if (feof(temp)) {
+            printf("End of file reached.\n");
+        } else if (ferror(temp)) {
+            printf("Error reading file.\n");
+        }
+
+        printf("=========================================\n");
     }
-
-    // Check for errors or end of file
-    if (feof(temp)) {
-        printf("End of file reached.\n");
-    } else if (ferror(temp)) {
-        printf("Error reading file.\n");
-    }
-
-    printf("=========================================\n");
-
-    //
 
     rewind(temp);
 
     FILE *file = fopen(fileName, "w");
     if(fileName == NULL){
-        printf("Couldn't create temporary file\n");
+        if(verbose)printf("Couldn't create temporary file\n");
         exit(-1);
     }
 
