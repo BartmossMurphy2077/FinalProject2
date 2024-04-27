@@ -271,12 +271,22 @@ int main() {
                         break;
                     }
 
-                    if(response == 1){
-                        changeStatus(&records, columnNO - 1, "Complete\n");
-                    } else if(response == 2){
-                        changeStatus(&records, columnNO - 1, "In Progress\n");
+                    if(columnNO == size){
+                        if(response == 1){
+                            changeStatus(&records, columnNO - 1, "Complete");
+                        } else if(response == 2){
+                            changeStatus(&records, columnNO - 1, "In Progress");
+                        } else {
+                            changeStatus(&records, columnNO - 1, "No Status");
+                        }
                     } else {
-                        changeStatus(&records, columnNO - 1, "No Status\n");
+                        if(response == 1){
+                            changeStatus(&records, columnNO - 1, "Complete\n");
+                        } else if(response == 2){
+                            changeStatus(&records, columnNO - 1, "In Progress\n");
+                        } else {
+                            changeStatus(&records, columnNO - 1, "No Status\n");
+                        }
                     }
 
                     response = -1;

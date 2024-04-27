@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "functions.h"
 
-bool verbose = false;
+bool verbose = true;
 
 void ReadWholeFIle(char fileName[100]){
     FILE *file = fopen(fileName, "r");
@@ -380,7 +380,7 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
         snprintf(String, sizeof(String), "%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
         if(verbose)printf("\n*********\n");
         if(verbose)printf("%s", String);
-        if(verbose)printf("\n*********\n");
+        if(verbose)printf("\n+++++++++\n");
         fputs(String, temp);
     }
     char String[500];
