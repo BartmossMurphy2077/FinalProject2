@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include "functions.h"
 
-bool verbose = true;
+bool verbose = false;
 
 void ReadWholeFIle(char fileName[100]){
     FILE *file = fopen(fileName, "r");
@@ -435,14 +435,14 @@ void removeEmptyLines(const char *filename) {
     // Open the input file for reading
     FILE *inputFile = fopen(filename, "r");
     if (inputFile == NULL) {
-        perror("Error opening file");
+        if(verbose)perror("Error opening file");
         return;
     }
 
     // Create a temporary file for writing non-empty lines
     FILE *tempFile = tmpfile();
     if (tempFile == NULL) {
-        perror("Error creating temporary file");
+        if(verbose)perror("Error creating temporary file");
         fclose(inputFile);
         return;
     }
@@ -472,7 +472,7 @@ void removeEmptyLines(const char *filename) {
     // Reopen the input file in write mode to overwrite it
     inputFile = fopen(filename, "w");
     if (inputFile == NULL) {
-        perror("Error opening file for writing");
+        if(verbose)perror("Error opening file for writing");
         fclose(tempFile);
         return;
     }

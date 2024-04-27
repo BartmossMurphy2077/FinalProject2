@@ -51,7 +51,7 @@ int main() {
                 //format check
                 int day, month, year;
                 if(sscanf(strResponse, "%d/%d/%d", &day, &month, &year) != 3){
-                    printf("Input does not match the expected date format");
+                    printf("\nInput does not match the expected date format\n");
                     strcpy(strResponse, "");
                     break;
                 }
@@ -76,7 +76,7 @@ int main() {
                 strcpy(newRecord.description, Description);
 
                 //category input
-                printf("Please enter one of these Categories:\n1: Work\n 2: Hobby\n3: Home\n4: Other");
+                printf("Please enter one of these Categories:\n1: Work\n2: Hobby\n3: Home\n4: Other\n");
                 scanf("%d", &response);
 
                 if(response < 1 || response > 4){
@@ -98,7 +98,7 @@ int main() {
                 response = -1;
 
                 //priority input
-                printf("Please enter a priority level:\n1(Very urgent)\n2(Urgent)\n3(Not urgent)");
+                printf("Please enter a priority level:\n1(Very urgent) \n2(Urgent) \n3(Not urgent)\n");
                 scanf("%d", &response);
 
                 if(response < 1 || response > 3){
@@ -118,7 +118,7 @@ int main() {
                 response = -1;
 
                 //status input
-                printf("Please enter one of these Statuses:\n1: Complete\n 2: In Progress\n3: No Status");
+                printf("Please enter one of these Statuses:\n1: Complete\n2: In Progress\n3: No Status\n");
                 scanf("%d", &response);
 
                 if(response < 1 || response > 3){
@@ -159,7 +159,7 @@ int main() {
                     break;
                 }
 
-                printf("What specifically do you want to edit?\n1: date\n2: description\n3: category\n4: priority\n5: status");
+                printf("What specifically do you want to edit?\n1: date\n2: description\n3: category\n4: priority\n5: status\n");
                 int choice;
                 scanf("%d", &choice);
                 printf("choice: %d\n", choice);
@@ -185,7 +185,7 @@ int main() {
                     //format check
                     int day, month, year;
                     if(sscanf(strResponse, "%d/%d/%d", &day, &month, &year) != 3){
-                        printf("Input does not match the expected date format");
+                        printf("Input does not match the expected date format\n");
                         strcpy(strResponse, "");
                         break;
                     }
@@ -217,7 +217,7 @@ int main() {
 
                 } else if(choice == 3){
                     //changing category
-                    printf("Please enter one of these Categories:\n1: Work\n 2: Hobby\n3: Home\n4: Other");
+                    printf("Please enter one of these Categories:\n1: Work\n2: Hobby\n3: Home\n4: Other\n");
                     scanf("%d", &response);
 
                     if(response < 1 || response > 4){
@@ -241,7 +241,7 @@ int main() {
 
                 } else if(choice == 4){
                     //changing priority
-                    printf("Please enter a priority level:\n1(Very urgent)\n2(Urgent)\n3(Not urgent)");
+                    printf("Please enter a priority level:\n1(Very urgent)\n2(Urgent)\n3(Not urgent)\n");
                     scanf("%d", &response);
 
                     if(response < 1 || response > 3){
@@ -262,7 +262,7 @@ int main() {
 
                 } else {
                     //changing status
-                    printf("Please enter one of these Statuses:\n1: Complete\n 2: In Progress\n3: No Status");
+                    printf("Please enter one of these Statuses:\n1: Complete\n 2: In Progress\n3: No Status\n");
                     scanf("%d", &response);
 
                     if(response < 1 || response > 3){
@@ -329,7 +329,7 @@ int main() {
 
                 break;
             case 4:
-                printf("Choose a filtering option which will only show certain records:\n1: Filter by Category\n2: Filter by Priority\n3: Filter by Status\n4: Filter by Time interval");
+                printf("Choose a filtering option which will only show certain records:\n1: Filter by Category\n2: Filter by Priority\n3: Filter by Status\n4: Filter by Time interval\n");
                 scanf("%d", &response);
 
                 if(response < 0 || response > 4){
@@ -340,7 +340,7 @@ int main() {
 
                 switch(response){
                     case 1:
-                        printf("By what category do you want to filter by?\n1: Work\n2: Hobby\n3: Home\n4: Other");
+                        printf("By what category do you want to filter by?\n1: Work\n2: Hobby\n3: Home\n4: Other\n");
                         scanf("%d", &response);
 
                         if(response < 0 || response > 4){
@@ -363,7 +363,7 @@ int main() {
 
                         break;
                     case 2:
-                        printf("By what priority level do you want to filter by?\n1: 1(Very urgent)\n2: 2(Urgent)\n3: 3(Not Urgent)");
+                        printf("By what priority level do you want to filter by?\n1: 1(Very urgent)\n2: 2(Urgent)\n3: 3(Not Urgent)\n");
                         scanf("%d", &response);
 
                         if(response < 0 || response > 3){
@@ -382,7 +382,7 @@ int main() {
                         response = -1;
                         break;
                     case 3:
-                        printf("By what status do you want to filter by?\n1: Complete\n2: In Progress\n3: No Status");
+                        printf("By what status do you want to filter by?\n1: Complete\n2: In Progress\n3: No Status\n");
                         scanf("%d", &response);
 
                         if(response < 0 || response > 3){
@@ -402,7 +402,7 @@ int main() {
 
                         response = -1;
                     case 4:
-                        printf("How do you want to filter by time?\n1: Completion date within x days\n2: Completion date after x days\n3: By dates that are overdue");
+                        printf("How do you want to filter by time?\n1: Completion date within x days\n2: Completion date after x days\n3: By dates that are overdue\n");
                         scanf("%d", &response);
 
                         if(response < 0 || response > 3){
