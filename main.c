@@ -24,7 +24,7 @@ int main() {
     //The Menu Handling system
     bool displayMenu = true;
     while(displayMenu){
-        printf("\n");
+        printf("\n================================================================================================\n");
         printf("Here are the commands: \n0: Save and Close\n1: Add Record\n2: Change Record\n3: Delete Record \n4: Viewing Options\n");
 
         printf("Please input your response: ");
@@ -151,7 +151,9 @@ int main() {
                 printf("=================================================\n");
 
                 printf("Which specific Record do you want to edit?\n");
-                int columnNO = scanf("%d", &response);
+                int columnNO;
+                scanf("%d", &columnNO);
+                printf("column No: %d\n", columnNO);
 
                 if(columnNO < 0 || columnNO > size){
                     printf("Request out of bounds.\n");
@@ -160,7 +162,9 @@ int main() {
                 }
 
                 printf("What specifically do you want to edit?\n1: date\n2: description\n3: category\n4: priority\n5: status");
-                int choice = scanf("%d", &response);
+                int choice;
+                scanf("%d", &choice);
+                printf("choice: %d\n", choice);
 
                 if(choice < 0 || choice > 5){
                     printf("Request out of bounds.\n");
@@ -197,7 +201,7 @@ int main() {
                     }
                     //adding date
                     snprintf(newDate, sizeof(newDate), "%02d/%02d/%04d", day, month, year);
-                    changeDate(&records, columnNO, newDate);
+                    changeDate(&records, columnNO - 1, newDate);
                     printf("Date changed successfully to %s at record %d \n", newDate, columnNO);
 
                     strcpy(strResponse, "");
@@ -208,8 +212,8 @@ int main() {
                     char newDescription[100];
                     printf("Please enter a new description: \n");
                     scanf(" %[^\n]s", newDescription);
-                    changeDescription(&records, columnNO, newDescription);
-                    printf("Description succesfully changed at record %d \n", columnNO);
+                    changeDescription(&records, columnNO - 1, newDescription);
+                    printf("Description succesfully changed at record %d \n", columnNO - 1);
 
                     response = -1;
 
@@ -225,13 +229,13 @@ int main() {
                     }
 
                     if(response == 1){
-                        changeCategory(&records, columnNO, "Work");
+                        changeCategory(&records, columnNO - 1, "Work");
                     } else if(response == 2){
-                        changeCategory(&records, columnNO, "Hobby");
+                        changeCategory(&records, columnNO - 1, "Hobby");
                     } else if(response == 3){
-                        changeCategory(&records, columnNO, "Home");
+                        changeCategory(&records, columnNO - 1, "Home");
                     } else {
-                        changeCategory(&records, columnNO, "Other");
+                        changeCategory(&records, columnNO - 1, "Other");
                     }
 
                     response = -1;
@@ -249,11 +253,11 @@ int main() {
                     }
 
                     if(response == 1){
-                        changePriority(&records, columnNO, 1);
+                        changePriority(&records, columnNO - 1, 1);
                     } else if(response == 2){
-                        changePriority(&records, columnNO, 2);
+                        changePriority(&records, columnNO - 1, 2);
                     } else {
-                        changePriority(&records, columnNO, 3);
+                        changePriority(&records, columnNO - 1, 3);
                     }
 
                     response = -1;
@@ -270,11 +274,11 @@ int main() {
                     }
 
                     if(response == 1){
-                        changeStatus(&records, columnNO, "Complete\n");
+                        changeStatus(&records, columnNO - 1, "Complete\n");
                     } else if(response == 2){
-                        changeStatus(&records, columnNO, "In Progress\n");
+                        changeStatus(&records, columnNO - 1, "In Progress\n");
                     } else {
-                        changeStatus(&records, columnNO, "No Status\n");
+                        changeStatus(&records, columnNO - 1, "No Status\n");
                     }
 
                     response = -1;
@@ -295,15 +299,17 @@ int main() {
                 printf("=================================================\n");
 
                 printf("Which specific Record do you want to delete?\n");
-                int deleteColumnNo = scanf("%d", &response);
+                int deleteColumnNo;
+                scanf("%d", &deleteColumnNo);
 
-                if(columnNO < 0 || columnNO > size){
+
+                if(deleteColumnNo < 0 || deleteColumnNo > size){
                     printf("Input out of bounds\n");
                     response = -1;
                     break;
                 }
 
-                deleteRecordInRamByIndex(&records, &size, deleteColumnNo);
+                deleteRecordInRamByIndex(&records, &size, deleteColumnNo - 1);
                 printf("Record deleted at index %d\n", deleteColumnNo);
 
                 printf("This is the edited database at the moment: \n");
@@ -420,10 +426,6 @@ int main() {
                 response = -1;
         }
     }
-
-
-
-
 
 
 
