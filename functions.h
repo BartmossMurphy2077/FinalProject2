@@ -37,4 +37,7 @@ double presentFutureDifference(char futureDate[100]);
 void filterByTimeGreaterThan(RecordStructure **array, int *size, double timeInterval);
 void filterByTimeLesserThan(RecordStructure **array, int *size, double timeInterval);
 void filterByTimeOverdue(RecordStructure **array, int *size);
+
+
+void removeEmptyLines(const char *filename);
 #endif //FINALPROJECT2_FUNCTIONS_H

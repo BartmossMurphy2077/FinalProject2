@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include "functions.h"
 
 bool verbose = true;
@@ -387,7 +388,7 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
     snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[*size-1].date, (*array)[*size-1].description, (*array)[*size-1].category, (*array)[*size-1].priority, (*array)[*size-1].status);
     if(verbose)printf("\n*********\n");
     if(verbose)printf("%s", String);
-    if(verbose)printf("\n*********\n");
+    if(verbose)printf("\n+++++++++\n");
     fputs(String, temp);
 
     if(verbose){
@@ -430,6 +431,59 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
     fclose(temp);
 }
 
+void removeEmptyLines(const char *filename) {
+    // Open the input file for reading
+    FILE *inputFile = fopen(filename, "r");
+    if (inputFile == NULL) {
+        perror("Error opening file");
+        return;
+    }
 
+    // Create a temporary file for writing non-empty lines
+    FILE *tempFile = tmpfile();
+    if (tempFile == NULL) {
+        perror("Error creating temporary file");
+        fclose(inputFile);
+        return;
+    }
 
-//date,description,category,1,status
+    char buffer[1000];
+    // Read lines from the input file
+    while (fgets(buffer, sizeof(buffer), inputFile) != NULL) {
+        // Trim leading and trailing whitespace characters
+        char *trimmed = buffer;
+        while (isspace(*trimmed)) {
+            ++trimmed;
+        }
+
+        // Check if the line is empty after trimming
+        if (*trimmed == '\0' || *trimmed == '\n') {
+            continue; // Skip empty lines
+        }
+
+        // Write non-empty lines to the temporary file
+        fputs(buffer, tempFile);
+    }
+
+    // Close the input file and temporary file
+    fclose(inputFile);
+    rewind(tempFile);
+
+    // Reopen the input file in write mode to overwrite it
+    inputFile = fopen(filename, "w");
+    if (inputFile == NULL) {
+        perror("Error opening file for writing");
+        fclose(tempFile);
+        return;
+    }
+
+    // Copy the content of the temporary file back to the input file
+    char copyBuffer[1000];
+    while (fgets(copyBuffer, sizeof(copyBuffer), tempFile) != NULL) {
+        fputs(copyBuffer, inputFile);
+    }
+
+    // Close and remove the temporary file
+    fclose(inputFile);
+    fclose(tempFile);
+}

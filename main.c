@@ -438,6 +438,9 @@ int main() {
     // Free the dynamically allocated memory
     freeDynamicArray(records);
 
+    //delete empty lines in file
+    removeEmptyLines(fileName);
+
 
     return 0;
 }
