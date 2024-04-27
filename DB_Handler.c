@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <unistd.h>
 #include <time.h>
 #include "functions.h"
 
@@ -115,6 +113,27 @@ void deleteRecordInRam(RecordStructure **array, int *size, char word[100]){
     }
 }
 
+void deleteRecordInRamByIndex(RecordStructure **array, int *size, int index) {
+
+    // Shift elements after the deleted item to the left
+    for (int i = index; i < *size - 1; i++) {
+        (*array)[i] = (*array)[i + 1];
+    }
+
+    // Adjust the size of the dynamic array
+    *size -= 1;
+
+    // Reallocate memory to shrink the dynamic array
+    RecordStructure *temp = (RecordStructure *)realloc(*array, (*size) * sizeof(RecordStructure));
+    if (temp == NULL) {
+        fprintf(stderr, "Memory reallocation failed\n");
+        exit(EXIT_FAILURE); // Terminate the program in case of memory allocation failure
+    }
+
+    // Update the pointer to the dynamic array
+    *array = temp;
+}
+
 void readWholeRam(RecordStructure *array, int *size){
     for(int i = 0; i < *size; i++){
         printf("Record %d:\n", i + 1);
@@ -200,6 +219,25 @@ double presentFutureDifference(char futureDate[100]){
 
 }
 
+//function to check if the day is valid
+int isValidDateFormat(const char *strResponse) {
+    int day, month, year;
+    char delimiter;
+
+    // Attempt to parse the string
+    if (sscanf(strResponse, "%d/%d/%d%c", &day, &month, &year, &delimiter) == 3) {
+        // Check if the parsed values are within valid ranges
+        if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 0) {
+            // Check if the delimiter is a '/'
+            if (delimiter == '/') {
+                return 1; // Valid date format
+            }
+        }
+    }
+
+    return 0; // Invalid date format
+}
+
 //function that uses the presentFutureDifference function to list the things that are due in a certain time interval
 void filterByTimeGreaterThan(RecordStructure **array, int *size, double timeInterval){
     int found = 0;
@@ -252,7 +290,7 @@ void filterByTimeOverdue(RecordStructure **array, int *size){
     }
 }
 
-//categories: Work, Hobby, Home
+//categories: Work, Hobby, Home, Other
 //should print out all the records with the specified category
 void filterByCategory(RecordStructure **array, int *size, char category[100]){
     int found = 0;
