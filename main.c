@@ -2,15 +2,36 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "functions.h"
 
-char fileName[100] = "C:\\Users\\hugok\\CLionProjects\\FinalProject2\\info.csv";
+char fileName[100] = "info.csv";
+
 
 int response = -1;
 char strResponse[100] = "";
 
 int main() {
+    //checks if the info.csv file exists and if not creates it
+    if(fopen(fileName, "r") == NULL){
+        printf("info.csv file doesn't exist, creating new file.\n");
+
+        FILE *file = fopen(fileName, "w");
+
+        if(file == NULL){
+            printf("Error creating info.csv file\n");
+            exit(-1);
+        } else {
+            printf("File successfully created.\n");
+
+            fclose(file);
+        }
+    } else {
+        printf("file info.csv exists");
+    }
+
+
     // Create dynamic array of RecordStructure
     RecordStructure *records = createDyanmicArray(fileName);
 
