@@ -263,7 +263,7 @@ void filterByTimeGreaterThan(RecordStructure **array, int *size, double timeInte
 void filterByTimeLesserThan(RecordStructure **array, int *size, double timeInterval){
     int found = 0;
     for(int i = 0; i<*size; i++){
-        if(presentFutureDifference((*array)[i].date) <= timeInterval){
+        if(presentFutureDifference((*array)[i].date) <= timeInterval && presentFutureDifference((*array)[i].date) >= 0){
             printf("Date: %s\n", (*array)[i].date);
             printf("Description: %s\n", (*array)[i].description);
             printf("Category: %s\n", (*array)[i].category);

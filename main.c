@@ -283,7 +283,7 @@ int main() {
 
                 } else {
                     //changing status
-                    printf("Please enter one of these Statuses:\n1: Complete\n 2: In Progress\n3: No Status\n");
+                    printf("Please enter one of these Statuses:\n1: Complete\n2: In Progress\n3: No Status\n");
                     scanf("%d", &response);
 
                     if(response < 1 || response > 3){
@@ -292,22 +292,12 @@ int main() {
                         break;
                     }
 
-                    if(columnNO == size){
-                        if(response == 1){
-                            changeStatus(&records, columnNO - 1, "Complete");
-                        } else if(response == 2){
-                            changeStatus(&records, columnNO - 1, "In Progress");
-                        } else {
-                            changeStatus(&records, columnNO - 1, "No Status");
-                        }
+                    if(response == 1){
+                        changeStatus(&records, columnNO - 1, "Complete\n");
+                    } else if(response == 2){
+                        changeStatus(&records, columnNO - 1, "In Progress\n");
                     } else {
-                        if(response == 1){
-                            changeStatus(&records, columnNO - 1, "Complete\n");
-                        } else if(response == 2){
-                            changeStatus(&records, columnNO - 1, "In Progress\n");
-                        } else {
-                            changeStatus(&records, columnNO - 1, "No Status\n");
-                        }
+                        changeStatus(&records, columnNO - 1, "No Status\n");
                     }
 
                     response = -1;
