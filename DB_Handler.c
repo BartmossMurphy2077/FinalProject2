@@ -378,7 +378,7 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
 
     for(int i = 0; i < *size-1; i++){
         char String[500];
-        snprintf(String, sizeof(String), "%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
+        snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
         if(verbose)printf("\n*********\n");
         if(verbose)printf("%s", String);
         if(verbose)printf("\n+++++++++\n");
