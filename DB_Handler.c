@@ -376,7 +376,7 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
         exit(-1);
     }
 
-    for(int i = 0; i < *size-1; i++){
+    for(int i = 0; i < *size; i++){
         char String[500];
         snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[i].date, (*array)[i].description, (*array)[i].category, (*array)[i].priority, (*array)[i].status);
         if(verbose)printf("\n*********\n");
@@ -384,12 +384,6 @@ void saveRamToCsv(char fileName[100], RecordStructure **array, int *size){
         if(verbose)printf("\n+++++++++\n");
         fputs(String, temp);
     }
-    char String[500];
-    snprintf(String, sizeof(String), "\n%s,%s,%s,%d,%s", (*array)[*size-1].date, (*array)[*size-1].description, (*array)[*size-1].category, (*array)[*size-1].priority, (*array)[*size-1].status);
-    if(verbose)printf("\n*********\n");
-    if(verbose)printf("%s", String);
-    if(verbose)printf("\n+++++++++\n");
-    fputs(String, temp);
 
     if(verbose){
         rewind(temp);
